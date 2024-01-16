@@ -1,0 +1,158 @@
+# preprocessing
+
+language = spark.read.json('countrylanguage.json')
+country = spark.read.json('country.json')
+city = spark.read.json('city.json')
+import pyspark.sql.functions as fc 
+
+
+# question 2a
+
+language.filter('IsOfficial = "T"').groupby('Language').agg(fc.count('*').alias('cnt')).orderBy('cnt', ascending =False).show()
+
+# output
++--------------+---+
+|      Language|cnt|
++--------------+---+
+|       English| 44|
+|        Arabic| 22|
+|       Spanish| 20|
+|        French| 18|
+|    Portuguese|  6|
+|        German|  6|
+|       Italian|  4|
+|         Dutch|  4|
+|         Malay|  4|
+|       Russian|  3|
+|        Danish|  3|
+|Serbo-Croatian|  3|
+|        Samoan|  2|
+|       KetÂšua|  2|
+|       Turkish|  2|
+|         Tamil|  2|
+|         Greek|  2|
+|     Norwegian|  2|
+|       AimarÃ¡|  2|
+|       Swedish|  2|
++--------------+---+
+
+# question 2b
+country.filter('GNP >100000').join(city, country.Capital == city.ID).filter('Continent = "North America"').select(country.Name, city.Name).show()
+
+# output
++-------------+-----------------+
+|         Name|             Name|
++-------------+-----------------+
+|       Canada|           Ottawa|
+|       Mexico|Ciudad de MÃ©xico|
+|United States|       Washington|
++-------------+-----------------+
+
+#question 2c
+
+language.filter('IsOfficial = "T"').filter('Language = "English"').join(country, country.Code == language.CountryCode).filter('Continent = "North America"').select(country.Name,).show()
+
+# output
++--------------------+
+|                Name|
++--------------------+
+|            Anguilla|
+| Antigua and Barbuda|
+|              Belize|
+|             Bermuda|
+|            Barbados|
+|              Canada|
+|      Cayman Islands|
+|Saint Kitts and N...|
+|         Saint Lucia|
+|          Montserrat|
+|Turks and Caicos ...|
+|       United States|
+|Saint Vincent and...|
+|Virgin Islands, B...|
+|Virgin Islands, U.S.|
++--------------------+
+
+question 2d
+
+city.filter('CountryCode= "USA"').agg(fc.max(city.Population).alias('Population')).show()
+
+# output
++----------+
+|Population|
++----------+
+|   8008278|
++----------+
+
+
+question 2e
+
+english_official = language.where('IsOfficial = "T" and Language = "English"')
+french_official = language.where('IsOfficial = "T" and Language = "French"')
+english_official.join(french_official, french_official.CountryCode == english_official.CountryCode).select(english_official.CountryCode).show()
+
+# output
++-----------+
+|CountryCode|
++-----------+
+|        CAN|
+|        SYC|
+|        VUT|
++-----------+
+
+Question 3
+
+
+#question 3a 
+country = spark.read.json('country.json')
+country_rdd = country.rdd
+country_rdd.filter(lambda r: 10000<=r['GNP']<=20000).count()
+
+# output
+20
+
+#question 3b
+country_rdd.map(lambda r: (r['Continent'],r['GNP'])).reduceByKey(lambda U,x: max(U,x)).collect()
+
+#output
+[('North America', 8510700.0), ('Asia', 3787042.0), ('Africa', 116729.0), ('Europe', 2133367.0), ('South America', 776739.0), ('Oceania', 351182.0), ('Antarctica', 0.0)]
+
+# question 3c
+
+city = spark.read.json('city.json')
+city_rdd = city.rdd
+country_id = country_rdd.map(lambda r: (r['Capital'], r['Name']))
+city_id = city_rdd.map(lambda r: (r['ID'],r['Name']))
+combined_rdd = city_id.join(country_id)
+combined_rdd.map(lambda U: (U[1][0], U[1][1])).sortByKey(False).take(20)
+
+# output
+
+[('al-Manama', 'Bahrain'), ('Zagreb', 'Croatia'), ('Yerevan', 'Armenia'), ('Yaren', 'Nauru'), ('YaoundÃ©', 'Cameroon'), ('Yamoussoukro', 'CÃ´te dÂ’Ivoire'), ('Windhoek', 'Namibia'), ('Willemstad', 'Netherlands Antilles'), ('Wien', 'Austria'), ('West Island', 'Cocos (Keeling) Islands'), ('Wellington', 'New Zealand'), ('Washington', 'United States'), ('Warszawa', 'Poland'), ('Vilnius', 'Lithuania'), ('Vientiane', 'Laos'), ('Victoria', 'Seychelles'), ('Victoria', 'Hong Kong'), ('Valletta', 'Malta'), ('Vaduz', 'Liechtenstein'), ('Ulan Bator', 'Mongolia')]
+
+# question 3d 
+
+
+
+country_population_rdd = city_rdd.filter(lambda r: r['CountryCode'] == "USA")
+city_population = country_population_rdd.map(lambda r: (r['Population'],r['Name']))
+city_population.reduceByKey(lambda U,x: max(U,x)).take(1)
+
+#output
+[(8008278, 'New York')]
+
+
+# question 3e
+
+language = spark.read.json('countrylanguage.json')
+language_rdd = language.rdd
+official_rdd = language_rdd.filter(lambda r: r['IsOfficial'] == "T")
+english_offical = official_rdd.filter(lambda r: r['Language'] == "English")
+french_offical = official_rdd.filter(lambda r: r['Language'] == "French")
+english_official_map = english_offical.map(lambda r: (r['CountryCode'],r['Language']))
+french_official_map = french_offical.map(lambda r: (r['CountryCode'],r['Language']))
+english_official_map.join(french_official_map).collect()
+
+
+# output
+[('CAN', ('English', 'French')), ('SYC', ('English', 'French')), ('VUT', ('English', 'French'))]
