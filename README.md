@@ -1,4 +1,4 @@
-# Class Description
+![image](https://github.com/drewm8080/big_data_management/assets/71193439/4a277ec8-2305-49d8-9845-17932bc5d01f)# Class Description
 
 This class covers various topics related to data management and storage systems. Below is an overview of the topics covered each week.
 
@@ -17,6 +17,14 @@ This class covers various topics related to data management and storage systems.
 - Hadoop MapReduce
 - Apache Spark
 
-# Homework Topic/Description/Grade
+## Homework Topic/Description/Grade
+| Homework | Topic       | Grade |
+|----------|-------------------|-------|
+| 1        | Firebase | 92    |
+| 2        | HDFS,XPath, and XML | 98    |
+| 3        | SQL | 97    |
+| 4        | Indexing and Query Execution | 95    |
+| 5        | Hadoop and Spark | 97    |
 
+**Overall Grade**: A
 
