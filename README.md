@@ -18,13 +18,18 @@ This class covers various topics related to data management and storage systems.
 - Apache Spark
 
 ## Homework Topic/Description/Grade
-| Homework | Topic       | Grade |
+| Assignment | Topic       | Grade |
 |----------|-------------------|-------|
-| 1        | Firebase | 92    |
-| 2        | HDFS,XPath, and XML | 98    |
-| 3        | SQL | 97    |
-| 4        | Indexing and Query Execution | 95    |
-| 5        | Hadoop and Spark | 97    |
+| HW 1        | Firebase | 92    |
+| HW 2        | HDFS,XPath, and XML | 98    |
+| HW 3        | SQL | 97    |
+| HW 4        | Indexing and Query Execution | 95    |
+| HW 5        | Hadoop and Spark | 97    |
+| Lab 1       | Amazon EC2 | 100    |
+| Lab 2        | Hadoop HDFS | 100    |
+| Lab 3        | MongoDB | 90    |
+| Lab 4        | JSON | 100    |
+
 
 **Overall Grade**: A
 
