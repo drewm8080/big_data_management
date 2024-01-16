@@ -28,7 +28,7 @@ This class covers various topics related to data management and storage systems.
 | Lab 1       | Amazon EC2 | 100    |
 | Lab 2        | Hadoop HDFS | 100    |
 | Lab 3        | MongoDB | 90    |
-| Lab 4        | JSON | 100    |
+| Lab 4        | Dynamodb | 100    |
 
 
 **Overall Grade**: A
